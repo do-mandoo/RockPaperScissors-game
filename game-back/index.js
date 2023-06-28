@@ -48,7 +48,7 @@ app.post('/register', async (req, res) => {
   const { nickname, password } = req.body;
 
   try {
-    const query = 'INSERT INTO users (nickname, password) VALUES ($1, $2)';
+    const query = 'INSERT INTO public."user" (nickname, password) VALUES ($1, $2)';
     await pool.query(query, [nickname, password]);
 
     res.status(201).json({ message: '회원가입이 완료되었습니다.' });
@@ -60,11 +60,11 @@ app.post('/register', async (req, res) => {
 
 // 로그인 엔드포인트
 app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-
+  const { nickname, password } = req.body;
+  console.log(nickname, password);
   try {
-    const query = 'SELECT * FROM users WHERE email = $1 AND password = $2';
-    const result = await pool.query(query, [email, password]);
+    const query = 'SELECT * FROM public."user" WHERE nickname = $1 AND password = $2';
+    const result = await pool.query(query, [nickname, password]);
     const user = result.rows[0];
 
     if (user) {
