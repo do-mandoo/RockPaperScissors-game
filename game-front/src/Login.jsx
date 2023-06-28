@@ -1,36 +1,81 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { Box, Button, Container, TextField } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 
 function LoginForm() {
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleNicknameChange = e => {
-    setNickname(e.target.value);
-  };
+  const navigate = useNavigate();
 
-  const handlePasswordChange = e => {
-    setPassword(e.target.value);
-  };
-
-  const handleSubmit = async e => {
-    e.preventDefault();
-
+  const handleLogin = async () => {
     try {
-      // 데이터를 백엔드로 전송
-      await axios.post('http://localhost:5001/saveNickname', { nickname, password });
-      console.log('Nickname이 성공적으로 로그인되었습니다.');
+      const response = await axios.post('http://localhost:5001/login', { nickname, password });
+      console.log(response, 'resersr');
+      const data = response.data;
+      console.log(data, 'data');
+      localStorage.setItem('game-id', nickname);
+      navigate('/game');
     } catch (error) {
-      console.error('Nickname 로그인 중 오류가 발생했습니다.', error);
+      console.error(error, '로그인 실패');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type='text' value={nickname} placeholder='nickname' onChange={handleNicknameChange} />
-      <input type='text' value={password} placeholder='password' onChange={handlePasswordChange} />
-      <button type='submit'>로그인</button>
-    </form>
+    <Container maxWidth='sm' sx={{ mt: 10 }}>
+      <h2>로그인</h2>
+      <TextField
+        label='사용자 닉네임'
+        value={nickname}
+        onChange={e => setNickname(e.target.value)}
+        fullWidth
+        margin='normal'
+      />
+      <TextField
+        label='비밀번호'
+        type='password'
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+        fullWidth
+        margin='normal'
+      />
+      <Button variant='contained' onClick={handleLogin}>
+        로그인하기
+      </Button>
+      <Link to='/signup'>
+        <Button>회원이 아니라면 가입하러 가기</Button>
+      </Link>
+      {/* <Box
+        sx={{
+          mt: '150px',
+          display: 'flex',
+          flexFlow: 'column nowrap',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Link to='/game'>
+          <Button
+            sx={{
+              fontSize: '30px',
+              fontWeight: 'bold',
+              bgcolor: 'blue',
+              color: '#fff',
+              p: '10px 30px',
+              transition: 'unset',
+              '&:hover': {
+                bgcolor: '#fff',
+                border: '3px solid blue',
+                color: 'blue',
+              },
+            }}
+          >
+            게임 시작 GO !
+          </Button>
+        </Link>
+      </Box> */}
+    </Container>
   );
 }
 

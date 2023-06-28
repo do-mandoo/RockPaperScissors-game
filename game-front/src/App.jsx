@@ -30,29 +30,21 @@
 
 // export default App;
 
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignupForm from './Signup';
 import LoginForm from './Login';
 import Gaming from './Gaming';
+import Header from './Header';
 
 const App = () => {
   return (
     <Router>
       <nav>
-        <ul>
-          <li>
-            <Link to='/signup'>회원가입</Link>
-          </li>
-          <li>
-            <Link to='/login'>로그인</Link>
-          </li>
-          <li>
-            <Link to='/game'>게임하기</Link>
-          </li>
-        </ul>
+        <Header />
       </nav>
 
       <Routes>
+        <Route path='/' element={<LoginForm />} />
         <Route path='/signup' element={<SignupForm />} />
         <Route path='/login' element={<LoginForm />} />
         <Route path='/game' element={<Gaming />} />

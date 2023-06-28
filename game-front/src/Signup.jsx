@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { Container, TextField, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const SignupForm = ({ onSignUpClick }) => {
+const SignupForm = () => {
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigate = useNavigate();
 
   const handleNicknameChange = e => {
     setNickname(e.target.value);
@@ -17,12 +19,16 @@ const SignupForm = ({ onSignUpClick }) => {
 
   const handleSignUp = async () => {
     try {
-      const response = await axios.post('http://localhost:5001/register', {
+      const res = await axios.post('http://localhost:5001/register', {
         nickname,
         password,
       });
-      console.log('회원가입 성공:', response.data);
-      onSignUpClick();
+      if (res.status === 201 || res.data.success === true) {
+        console.log('회원가입 성공:', res);
+        navigate('/login');
+      } else {
+        console.error('회원가입 실패');
+      }
     } catch (error) {
       console.error('회원가입 실패:', error);
     }
