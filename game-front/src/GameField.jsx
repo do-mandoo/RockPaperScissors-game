@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Box, IconButton, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-// import AlertDialogSlide from './Modal';
 
 const GameField = () => {
-  // const [open, setOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [randomOption, setRandomOption] = useState(null);
   const [result, setResult] = useState(null);
@@ -27,6 +25,7 @@ const GameField = () => {
     navigate;
   }, [navigate]);
 
+  // 3번 이기면 알럿이 뜨고 score0으로 초기화.
   const handleWin = () => {
     setScore(score + 1);
 
@@ -34,6 +33,8 @@ const GameField = () => {
       setTimeout(() => {
         alert('게임이 종료되었습니다.');
         setScore(0);
+        setLoseScore(0);
+        setDrawScore(0);
       }, 100);
     }
   };
@@ -69,11 +70,12 @@ const GameField = () => {
     setShowModal(true);
   };
 
+  // 이겼습니다,비겼습니다,졌습니다를 0.5초동안 모달로 띄우기.
   useEffect(() => {
     if (showModal) {
       const timer = setTimeout(() => {
         setShowModal(false);
-      }, 200);
+      }, 500);
 
       return () => {
         clearTimeout(timer);
@@ -81,14 +83,15 @@ const GameField = () => {
     }
   }, [showModal]);
 
-  // // 로그인이 안되어있다면 index페이지로 이동
-  // if (getUser === null || undefined) {
-  //   console.log(getUser, 'getuser');
-  //   return navigate('/login');
-  // }
+  // 로그인이 안되어있다면 index페이지로 이동
+  useEffect(() => {
+    if (getUser === null || getUser === undefined) {
+      return navigate('/');
+    }
+  }, [getUser, navigate]);
+
   return (
     <Box sx={{ display: 'flex', flexFlow: 'column nowrap', alignItems: 'center' }}>
-      {/* <AlertDialogSlide open={open} setOpen={setOpen} /> */}
       {/* Fight Zone----- */}
       <Box sx={styled.fZBox}>
         <Box sx={styled.fZBackText}>fight zone</Box>
